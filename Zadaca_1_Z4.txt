@@ -1,0 +1,102 @@
+//TP 2021/2022: Zadaća 1, Zadatak 4
+
+#include <iostream>
+#include <string>
+#include <array>
+#include <vector>
+#include <stdexcept>
+#include <cctype>
+
+
+typedef std::vector<std::string> Vektor;
+typedef std::array<Vektor, 100> Niz;
+
+
+bool AlfaNum (char znak) {
+
+    if (znak >= 'A' && znak <= 'Z' || znak >= 'a' && znak <= 'z' || znak >= '0' && znak <= '9')
+        return true;
+
+    return false;
+}
+
+
+std::string UVelikaSlova (std::string s) {
+
+    std::string caps;
+    
+    for (char c : s) {
+        if (c >= 'a' && c <= 'z') c -= 'a'-'A';
+        caps.push_back(c);
+    }
+
+    return caps;
+}
+
+
+Niz RazvrstajRijeciPoDuzini (std::string s) {
+
+    Niz niz;
+    std::string rijec;
+    int i=0, br_slova;
+    
+    do {
+        rijec = "";
+        br_slova = 0;
+
+        while (i<s.length() && !AlfaNum(s.at(i))) i++;
+
+        if (i==s.length()) break;
+        
+        while (i<s.length() && AlfaNum(s.at(i))) {
+            rijec.push_back(s.at(i));
+            br_slova++;
+            i++;
+        }
+
+        if (br_slova>99)
+            throw std::range_error("Recenica sadrzi predugacku rijec!");
+
+        rijec = UVelikaSlova(rijec);
+
+        niz.at(br_slova).push_back(rijec);
+
+    } while (i<s.length());
+
+
+    return niz;
+ }
+
+
+
+int main ()
+{
+
+    try {
+
+        std::string recenica;
+
+        std::cout << "Unesite recenicu: ";
+        std::getline(std::cin, recenica);
+        std::cout << std::endl;
+
+        auto niz = RazvrstajRijeciPoDuzini(recenica);
+
+        for (int i=1; i<niz.size(); i++) {
+            if (niz.at(i).size()>0) {
+                std::cout << "Duzina " << i << ": ";
+                for (int j=0; j<niz.at(i).size(); j++)
+                    std::cout << niz.at(i).at(j) << " ";
+                std::cout << std::endl;
+            }
+        }
+
+    } catch (std::range_error e) {
+        std::cout << "Greska: " << e.what();
+    
+    } catch (...) {
+        std::cout << "POGRESAN IZUZETAK";
+    }
+
+	return 0;
+}
