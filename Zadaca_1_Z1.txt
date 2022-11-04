@@ -1,0 +1,87 @@
+//TP 2021/2022: Zadaća 1, Zadatak 1
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+typedef std::vector<int> Vektor;
+
+
+int CiklickaPermutacija (Vektor v1, Vektor v2) {
+
+    if (v1.size() != v2.size()) return -1;
+    if (v1 == v2) return 0;
+
+    int pocetak_sekvence, i=0, j=0, pomak = -1, pomjeraj=0;
+
+    while (i<v2.size()) {
+
+        if (v1.at(0) == v2.at(i)) {
+
+            pocetak_sekvence = i; 
+
+            while (i<v2.size() && j<v1.size() && v2.at(i) == v1.at(j)) {
+                i++; j++;
+            }
+
+            if (i == v2.size()) {
+                pomak = j; 
+                i=0; 
+                pomjeraj=0;
+
+                while (i<pocetak_sekvence && v1.at(j) == v2.at(i)) {
+                    i++; j++; pomjeraj++;
+                }
+
+                if (i == pocetak_sekvence)
+                    return pomak;
+                
+                else {
+                    j=0;
+                    i-=pomjeraj;
+                }
+
+
+            } else {
+                j=0;
+                i-=pomak+1;
+            }
+        
+        }
+
+        i++;
+    }
+
+    return pomak;
+
+}
+
+
+
+int main ()
+{
+    Vektor v1, v2;
+    int unos;
+
+    std::cout << "Prva sekvenca: ";
+
+    while (std::cin >> unos)
+        v1.push_back(unos);
+    
+    std::cout << "Druga sekvenca: ";
+
+    std::cin.clear();
+    std::cin.ignore(10000,'\n');
+
+    while (std::cin >> unos)
+        v2.push_back(unos);
+
+    int rez = CiklickaPermutacija(v1,v2);
+
+
+    if (rez < 0)
+        std::cout << "Druga sekvenca nije ciklicka permutacija prve.";
+    else 
+        std::cout << "Druga sekvenca je ciklicka permutacija prve s pomakom " << rez << ".";
+
+	return 0;
+}
